@@ -12,6 +12,15 @@ var budgetController = (function(){
         this.value = value;
     };
 
+    var calulateTotal = function(type){
+        var sum = 0;
+        data.allItems[type].forEach(element => {
+            console.log(typeof(element.value));
+            sum += Number(element.value);
+        });
+        data.totals[type] = sum;
+    };
+
     var data = {
         allItems: {
             exp: [],
@@ -20,12 +29,13 @@ var budgetController = (function(){
         totals: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: -1
     };
 
     return {
         addItem: function(type, description, value){
-
             var newItem, ID;
 
             //create an id
@@ -45,6 +55,25 @@ var budgetController = (function(){
             data.allItems[type].push(newItem);
 
             return newItem;
+        },
+        calculateBudget: function(){
+            calulateTotal('exp');
+            calulateTotal('inc');
+
+            data.budget = data.totals.inc - data.totals.exp;
+            if(data.totals.inc > 0){
+                data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            }else {
+                data.percentage = -1;
+            }
+        },
+        getBudget: function(){
+            return {
+                budget: data.budget,
+                percentage: data.percentage,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp
+            }
         },
         detalis: function(){
             console.log(data);
@@ -118,6 +147,14 @@ var controller = (function(budgetCtrl, UICtrl){
     
     }
 
+    var updateBudget = function() {
+        budgetController.calculateBudget();
+
+        var budget = budgetController.getBudget();
+
+        console.log(budget);
+    }
+
     ctrlAddItem = function(){
         // Get field input data
         var input = UIController.getInput();
@@ -130,8 +167,9 @@ var controller = (function(budgetCtrl, UICtrl){
 
         // Clear the Fields
         UIController.clearFields();
-        
+
         // Calculate budget in the budget controller
+        updateBudget();
 
         // Display budget in the ui controller
     }
