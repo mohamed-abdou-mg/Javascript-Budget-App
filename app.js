@@ -138,6 +138,10 @@ var UIController = (function(){
             newHtml = newHtml.replace('%value%', obj.value);
             document.querySelector(element).insertAdjacentHTML("beforeend", newHtml);
         },
+        deleteListItem: function(itemId){
+            var el = document.getElementById(itemId);
+            el.parentNode.removeChild(el);
+        },
         displayBudget: function(obj){
             document.querySelector(domStrings.budgetValue).textContent = obj.budget;
             document.querySelector(domStrings.budgetIncomeValue).textContent = obj.totalInc;
@@ -216,8 +220,10 @@ var controller = (function(budgetCtrl, UICtrl){
         budgetController.deleteItem(type, ID);
 
         // delete item from ui
+        UIController.deleteListItem(itemId);
 
         // update budget, expenses, incomes and percentage
+        updateBudget();
     }
 
     return {
