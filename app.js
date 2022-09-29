@@ -245,21 +245,22 @@ var controller = (function(budgetCtrl, UICtrl){
         // Get field input data
         var input = UIController.getInput();
 
-        // Add the item to the budget controller
-        var item = budgetController.addItem(input.type, input.description, input.value);
+        if(input.description.length > 0 && input.value.length > 0){
+            // Add the item to the budget controller
+            var item = budgetController.addItem(input.type, input.description, input.value);
 
-        // Add the item to the ui controller
-        UIController.addListItem(item, input.type);
+            // Add the item to the ui controller
+            UIController.addListItem(item, input.type);
 
-        // Clear the Fields
-        UIController.clearFields();
+            // Clear the Fields
+            UIController.clearFields();
 
-        // Calculate and display budget
-        updateBudget();
+            // Calculate and display budget
+            updateBudget();
 
-        // Update percentages
-        updatePercentages();
-
+            // Update percentages
+            updatePercentages();
+        }
     }
 
     ctrlDeleteItem = function(event){
